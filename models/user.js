@@ -7,10 +7,12 @@ const mongoose = require("mongoose");
 //username and password are objects
 //do NOT TYPE require, type required
 //put the object on multiple lines as seen below
+//additional feature unique: true
 const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: true,
+    unique: true
   },
   password: {
     type: String,
