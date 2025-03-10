@@ -3,6 +3,8 @@ const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
+const session = require('express-session');
+
 
 //overrides the http method
 const methodOverride = require("method-override");
@@ -34,7 +36,17 @@ app.use(methodOverride("_method"));
 app.use(morgan('dev'));
 /*http requests from the browser that come to the /auth
 will be automatically be forwarded to the router code inside of the authController */
+//create session object first
+app.use(
+    session({
+      secret: process.env.SESSION_SECRET,
+      resave: false,
+      saveUninitialized: false,
+    })
+  );
 app.use("/auth", authController);
+//has a config object
+
 
 //tell the app to listen for HTTP requests
 app.listen(port, () => {
@@ -44,5 +56,7 @@ app.listen(port, () => {
 
 //mount routes (after lines 35)
 app.get('/', (req, res) => {
-    res.render('index.ejs');
-})
+    res.render('index.ejs', {
+        user: req.session.user,
+    });
+});
