@@ -6,6 +6,8 @@ const morgan = require("morgan");
 
 //overrides the http method
 const methodOverride = require("method-override");
+//import router object, the rquire function assumes js file, you don't need the suffix
+const authController = require("./controllers/auth");
 
 //configure settings
 dotenv.config();
@@ -15,6 +17,8 @@ const app = express();
 
 // Set the port from environment variable or default to 3000
 const port = process.env.PORT ? process.env.PORT : "3002";
+
+
 //connect to MongoDb
 mongoose.connect(process.env.MONGODB_URI);
 //event listener 
@@ -28,6 +32,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
 // Morgan for logging HTTP requests dev is the setting
 app.use(morgan('dev'));
+/*http requests from the browser that come to the /auth
+will be automatically be forwarded to the router code inside of the authController */
+app.use("/auth", authController);
 
 //tell the app to listen for HTTP requests
 app.listen(port, () => {
